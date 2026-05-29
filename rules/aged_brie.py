@@ -1,11 +1,17 @@
 from rules.base import UpdateRule
+from rules.helpers import decrease_sell_in, increase_quality
+
 
 class AgedBrieRule(UpdateRule):
+
     def apply(self, item):
-        item.sell_in -= 1
 
-        if item.quality < 50:
-            item.quality += 1
+        # sempre diminui o tempo
+        decrease_sell_in(item)
 
-        if item.sell_in < 0 and item.quality < 50:
-            item.quality += 1
+        # aged brie sempre melhora
+        increase_quality(item)
+
+        # depois que passa da validade melhora mais ainda
+        if item.sell_in < 0:
+            increase_quality(item)
